@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import HeroText from "../components/HeroText";
-import ParallaxBackground from "../components/ParallaxBackground";
+import ParallaxBackground from "../components/parallaxBackground.jsx";
 import { Astronaut } from "../components/Astronaut";
 import { Float } from "@react-three/drei";
 import { useMediaQuery } from "react-responsive";
@@ -40,7 +40,7 @@ function Rig() {
       state.camera.position,
       [state.mouse.x / 10, 1 + state.mouse.y / 10, 3],
       0.5,
-      delta
+      delta,
     );
   });
 }
