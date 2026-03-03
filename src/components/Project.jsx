@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ProjectDetails from "./ProjectDetails";
+import ProjectDetails from "./ProjectDetails.jsx";
 
 const Project = ({
   title,
