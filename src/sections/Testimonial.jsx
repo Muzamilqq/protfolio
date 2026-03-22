@@ -13,6 +13,7 @@ const ReviewCard = ({ img, name, username, body }) => {
     >
       <div className="flex flex-row items-center gap-2">
         <img
+          loading="lazy"
           className="rounded-full bg-white/10"
           width="32"
           height="32"
