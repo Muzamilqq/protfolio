@@ -10,6 +10,7 @@ import Loader from "../components/Loader.jsx";
 
 const Hero = () => {
   const isMobile = useMediaQuery({ maxWidth: 853 });
+
   return (
     <section className="flex items-start justify-center min-h-screen overflow-hidden md:items-start md:justify-start c-space">
       <HeroText />
@@ -18,15 +19,29 @@ const Hero = () => {
         className="absolute inset-0"
         style={{ width: "100vw", height: "100vh" }}
       >
-        <Canvas camera={{ position: [0, 1, 3] }}>
+        <Canvas
+          camera={{ position: [0, 1, 3] }}
+          // Force 1× pixel ratio on mobile — halves GPU fill work on high-DPR screens
+          dpr={isMobile ? 1 : [1, 2]}
+        >
           <Suspense fallback={<Loader />}>
-            <Float>
+            <Float
+              // Lighter float animation on mobile
+              speed={isMobile ? 1 : 2}
+              floatIntensity={isMobile ? 0.3 : 1}
+              rotationIntensity={isMobile ? 0.3 : 1}
+            >
               <Astronaut
-                scale={isMobile && 0.23}
-                position={isMobile && [0, -1.5, 0]}
+                scale={isMobile ? 0.23 : undefined}
+                position={isMobile ? [0, -1.5, 0] : undefined}
               />
             </Float>
-            <Rig />
+            {/*
+              Mouse-tracking camera runs every frame via useFrame.
+              Skip it on mobile — touch devices have no cursor,
+              and this saves one useFrame call per render.
+            */}
+            {!isMobile && <Rig />}
           </Suspense>
         </Canvas>
       </figure>

@@ -2,13 +2,15 @@
 
 import createGlobe from "cobe";
 import { useMotionValue, useSpring } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
+import { useMediaQuery } from "react-responsive";
 
 import { twMerge } from "tailwind-merge";
 
 const MOVEMENT_DAMPING = 1400;
 
-const GLOBE_CONFIG = {
+// Base config — quality settings are overridden per-device below
+const BASE_GLOBE_CONFIG = {
   width: 800,
   height: 800,
   onRender: () => {},
@@ -36,7 +38,21 @@ const GLOBE_CONFIG = {
   ],
 };
 
-export function Globe({ className, config = GLOBE_CONFIG }) {
+export function Globe({ className, config = BASE_GLOBE_CONFIG }) {
+  const isMobile = useMediaQuery({ maxWidth: 853 });
+
+  // Apply mobile-optimised quality settings on top of the caller's config.
+  // mapSamples: 4 000 vs 16 000 is the biggest single win — it controls how
+  // many texture samples the COBE renderer makes per frame.
+  const effectiveConfig = useMemo(
+    () => ({
+      ...config,
+      mapSamples: isMobile ? 4000 : (config.mapSamples ?? 16000),
+      devicePixelRatio: isMobile ? 1 : (config.devicePixelRatio ?? 2),
+    }),
+    [isMobile, config],
+  );
+
   let phi = 0;
   let width = 0;
   const canvasRef = useRef(null);
@@ -76,7 +92,7 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
     onResize();
 
     const globe = createGlobe(canvasRef.current, {
-      ...config,
+      ...effectiveConfig,
       width: width * 2,
       height: width * 2,
       onRender: (state) => {
@@ -92,7 +108,7 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
       globe.destroy();
       window.removeEventListener("resize", onResize);
     };
-  }, [rs, config]);
+  }, [rs, effectiveConfig]);
 
   return (
     <div
