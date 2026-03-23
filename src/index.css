@@ -55,6 +55,12 @@ body {
   overflow-x: hidden;
 }
 
+canvas,
+.animated-element {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
 .c-space {
   @apply sm:px-10 px-5 lg:px-15;
 }

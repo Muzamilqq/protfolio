@@ -20,7 +20,7 @@ const About = () => {
           <div className="z-10">
             <p className="headtext">Hi, I'm Muzamil Ashraf</p>
             <p className="subtext">
-              Over the last 1 years, I developed my frontend and backend dev
+              Over the last 1.5 years, I developed my frontend and backend dev
               skills to deliver dynamic and software and web applications.
             </p>
           </div>
